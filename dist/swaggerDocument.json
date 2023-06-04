@@ -1,0 +1,2566 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Minority africa backend documentation",
+        "description": "This is a simple API application made with Express and documented with Swagger",
+        "contact": {
+            "name": "Minority Africa",
+            "url": "https://minorityafrica.org/",
+            "email": "manority@minorityafrica.org"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    },
+    "security": [{
+            "bearerAuth": []
+        }],
+    "servers": [
+        {
+            "url": "http://localhost:4001",
+            "description": "Local Dev"
+        },
+        {
+            "url": "https://advanced-backend.azurewebsites.net",
+            "description": "Development Server"
+        },
+        {
+            "url": "https://advance-api.azurewebsites.net",
+            "description": "Live Server"
+        }
+    ],
+    "tags": [
+        {
+            "name": "Users",
+            "description": "API to manage Users"
+        },
+        {
+            "name": "AdminDashboard",
+            "description": "API to manage all the admin functionalities"
+        },
+        {
+            "name": "Articles",
+            "description": "API to manage all the articles posted"
+        },
+        {
+            "name": "Subscription",
+            "description": "API to manage all the subscribers"
+        },
+        {
+            "name": "Metrics",
+            "description": "API to manage all statistical information"
+        },
+        {
+            "name": "Notifications",
+            "description": "API to manage all notifications in the system"
+        },
+        {
+            "name": "PublisherDashboard",
+            "description": "API to manage all publisher functionalities"
+        },
+        {
+            "name": "AdvancerDashboard",
+            "description": "API to manage all advancer functionalities"
+        },
+        {
+            "name": "LandingPage",
+            "description": "API to manage all the landing page endpoints"
+        }
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/user/login": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Allow user to login",
+                "requestBody": {
+                    "description": "login object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/UserLogin"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/register": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Allow user to create new account",
+                "requestBody": {
+                    "description": "registration object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/User"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/registerPublisher": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Allow user to become publishers",
+                "requestBody": {
+                    "description": "registration object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/Publisher"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Publisher"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/uploadMedia": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Allow the user to upload media files",
+                "requestBody": {
+                    "description": "upload media file",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/definitions/mediaFile"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "multipart/form-data"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "image uploaded successfully"
+                    }
+                }
+            }
+        },
+        "/user/deleteUploadedMedia/{container}/{filename}/{id}": {
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "get the media uploaded",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "container",
+                        "required": true,
+                        "description": "container name"
+                    },
+                    {
+                        "in": "path",
+                        "name": "filename",
+                        "required": true,
+                        "description": "filename for either article or profile pic"
+                    },
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "id for either article media or profile picture"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/user/updateUploadedMedia/{container}/{filename}/{id}": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Allow the user to update uploaded media files",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "container",
+                        "required": true,
+                        "description": "container name"
+                    },
+                    {
+                        "in": "path",
+                        "name": "filename",
+                        "required": true,
+                        "description": "filename for either article or profile pic"
+                    },
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "id for either article media or profile picture"
+                    }
+                ],
+                "requestBody": {
+                    "description": "upload media file",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/definitions/updateMediaFile"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "multipart/form-data"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "image uploaded successfully"
+                    }
+                }
+            }
+        },
+        "/user/getMedia/{container}/{id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "get the media uploaded",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "container",
+                        "required": true,
+                        "description": "container name"
+                    },
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "filename for either article or profile pic"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/user/updatePassword/{id}": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "update password in the system",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "requestBody": {
+                    "description": "password object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/UpdatePassword"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/user/forgotPassword": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Allow user to request a reset password token",
+                "requestBody": {
+                    "description": "forgot password object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/forgotPassword"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Please check your emails"
+                    }
+                }
+            }
+        },
+        "/user/sendDeleteAccountToken": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Allow user to request a delete account token",
+                "requestBody": {
+                    "description": "delete account  object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/forgotPassword"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Please check your emails"
+                    }
+                }
+            }
+        },
+        "/user/resetPassword": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Allow user to reset password",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "required": true,
+                        "description": "Token sent to the user email",
+                        "type": "string"
+                    }
+                ],
+                "requestBody": {
+                    "description": "reset password object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/resetPassword"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User password updated successfully"
+                    }
+                }
+            }
+        },
+        "/user/deleteAccount": {
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Allow user to delete account",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "required": true,
+                        "description": "Token sent to the user email",
+                        "type": "string"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User account deleted successfully"
+                    }
+                }
+            }
+        },
+        "/user/deactivateAccount/{id}": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "deactive user account in the system",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "requestBody": {
+                    "description": "password and role object, role should be publisher or admin",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/adminPassword"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/user/googleAuth": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Allow user to sign/signUp using google account",
+                "requestBody": {
+                    "description": "google auth object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/googleAuth"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully authicated google user"
+                    }
+                }
+            }
+        },
+        "/user/GetGoogleTokens": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Allow the front end to get user google tokens",
+                "requestBody": {
+                    "description": "google code object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/GoogleCode"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully authicated google user"
+                    }
+                }
+            }
+        },
+        "/user/GetGoogleCredentials": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Gets google credentials of a user",
+                "requestBody": {
+                    "description": "google auth object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/GoogleRefreshToken"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully authicated google user"
+                    }
+                }
+            }
+        },
+        "/user/updateProfile/{id}": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "update user Profile in the system",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "requestBody": {
+                    "description": "user object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/UpdateUserObject"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/publisherDashboard/getPublisherArticles/{id}": {
+            "get": {
+                "tags": [
+                    "PublisherDashboard"
+                ],
+                "summary": "Get all published artiles by the publisher in the system",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/publisherDashboard/getDraftArticles/{id}": {
+            "get": {
+                "tags": [
+                    "PublisherDashboard"
+                ],
+                "summary": "Get all artile drafts by the publisher in the system",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/publisherDashboard/getPublisherPlan/{id}": {
+            "get": {
+                "tags": [
+                    "PublisherDashboard"
+                ],
+                "summary": "Get the plan a publisher subscribed to",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/publisherDashboard/deleteArticle/{id}": {
+            "delete": {
+                "tags": [
+                    "PublisherDashboard"
+                ],
+                "summary": "delete the article",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully deleted the article"
+                    }
+                }
+            }
+        },
+        "/publisherDashboard/editArticle/{id}": {
+            "put": {
+                "tags": [
+                    "PublisherDashboard"
+                ],
+                "summary": "update the article infomation",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "Article id"
+                    }
+                ],
+                "requestBody": {
+                    "description": "article object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/EditArticle"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/publisherDashboard/getRepublishedArticlesNo/{id}": {
+            "get": {
+                "tags": [
+                    "PublisherDashboard"
+                ],
+                "summary": "get republished articles",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully got the articles"
+                    }
+                }
+            }
+        },
+        "/publisherDashboard/getViewedArticlesNo/{id}": {
+            "get": {
+                "tags": [
+                    "PublisherDashboard"
+                ],
+                "summary": "get number of viewed articles",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully got the articles"
+                    }
+                }
+            }
+        },
+        "/publisherDashboard/getNoFollowers/{id}": {
+            "get": {
+                "tags": [
+                    "PublisherDashboard"
+                ],
+                "summary": "get number of followers",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully got the followers"
+                    }
+                }
+            }
+        },
+        "/publisherDashboard/getReadArticlesNo/{id}": {
+            "get": {
+                "tags": [
+                    "PublisherDashboard"
+                ],
+                "summary": "get number of read articles",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully got the articles"
+                    }
+                }
+            }
+        },
+        "/publisherDashboard/getPublishedArticlesNo/{id}": {
+            "get": {
+                "tags": [
+                    "PublisherDashboard"
+                ],
+                "summary": "get number of posted articles",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully got the articles"
+                    }
+                }
+            }
+        },
+        "/publisherDashboard/getViewsByMonth/{id}": {
+            "get": {
+                "tags": [
+                    "PublisherDashboard"
+                ],
+                "summary": "get number of read articles",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully got the articles"
+                    }
+                }
+            }
+        },
+        "/publisherDashboard/getReadsByMonth/{id}": {
+            "get": {
+                "tags": [
+                    "PublisherDashboard"
+                ],
+                "summary": "get number of read articles",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully got the articles"
+                    }
+                }
+            }
+        },
+        "/publisherDashboard/getTopPublisherArticles/{id}": {
+            "get": {
+                "tags": [
+                    "PublisherDashboard"
+                ],
+                "summary": "get top publisher articles",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully got the articles"
+                    }
+                }
+            }
+        },
+        "/publisherDashboard/getCurrentPublisherById/{id}": {
+            "get": {
+                "tags": [
+                    "PublisherDashboard"
+                ],
+                "summary": "get the current publisher by user ID",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully got the publisher"
+                    }
+                }
+            }
+        },
+        "/publisherDashboard/getRecentPublisherArticles/{id}": {
+            "get": {
+                "tags": [
+                    "PublisherDashboard"
+                ],
+                "summary": "get recent articles",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully got the articles"
+                    }
+                }
+            }
+        },
+        "/advancerDashboard/republishArticle/{id}": {
+            "post": {
+                "tags": [
+                    "AdvancerDashboard"
+                ],
+                "summary": "republish an article",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "requestBody": {
+                    "description": "article id object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/ArticleId"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successfully advanced the articles"
+                    }
+                }
+            }
+        },
+        "/advancerDashboard/updateAdvancerProfile": {
+            "put": {
+                "tags": [
+                    "AdvancerDashboard"
+                ],
+                "summary": "Allow advancers to update their information",
+                "requestBody": {
+                    "description": "registration object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/Advancer"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Advancer"
+                        }
+                    }
+                }
+            }
+        },
+        "/advancerDashboard/followPublisher/{id}": {
+            "post": {
+                "tags": [
+                    "AdvancerDashboard"
+                ],
+                "summary": "follow publisher",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Publisher id object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/PublisherId"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successfully followed the publisher"
+                    }
+                }
+            }
+        },
+        "/advancerDashboard/unFollowPublisher/{id}": {
+            "post": {
+                "tags": [
+                    "AdvancerDashboard"
+                ],
+                "summary": "unfollow publisher",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Publisher id object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/PublisherId"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successfully followed the publisher"
+                    }
+                }
+            }
+        },
+        "/advancerDashboard/getRepublishedArticles/{id}": {
+            "get": {
+                "tags": [
+                    "AdvancerDashboard"
+                ],
+                "summary": "get republished  article",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully got advanced articles"
+                    }
+                }
+            }
+        },
+        "/advancerDashboard/getAdvancerById/{id}": {
+            "get": {
+                "tags": [
+                    "AdvancerDashboard"
+                ],
+                "summary": "get an advancer by Id",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully got advancer"
+                    }
+                }
+            }
+        },
+        "/advancerDashboard/getFollowedPublishers/{id}": {
+            "get": {
+                "tags": [
+                    "AdvancerDashboard"
+                ],
+                "summary": "get followed publishers",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully got followed publishers"
+                    }
+                }
+            }
+        },
+        "/advancerDashboard/getfollowedPublishersNo/{id}": {
+            "get": {
+                "tags": [
+                    "AdvancerDashboard"
+                ],
+                "summary": "get followed publishers number",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully got followed publishers number"
+                    }
+                }
+            }
+        },
+        "/advancerDashboard/addWebsiteLink/{id}": {
+            "put": {
+                "tags": [
+                    "AdvancerDashboard"
+                ],
+                "summary": "allows advancers to add their website links",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "requestBody": {
+                    "description": "website Link",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/websiteLink"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successfully added websiteLink"
+                    }
+                }
+            }
+        },
+        "/advancerDashboard/deleteWebsiteLink/{id}": {
+            "put": {
+                "tags": [
+                    "AdvancerDashboard"
+                ],
+                "summary": "allows advancers to remove their website links",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "requestBody": {
+                    "description": "website Link",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/websiteLink"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successfully removed websiteLink"
+                    }
+                }
+            }
+        },
+        "/adminDashboard/getAdvancers": {
+            "get": {
+                "tags": [
+                    "AdminDashboard"
+                ],
+                "summary": "Get all advancers in the system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Advancer"
+                        }
+                    }
+                }
+            }
+        },
+        "/adminDashboard/getAdmins": {
+            "get": {
+                "tags": [
+                    "AdminDashboard"
+                ],
+                "summary": "Get all admins in the system",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/adminDashboard/getAdminProfile/{id}": {
+            "get": {
+                "tags": [
+                    "AdminDashboard"
+                ],
+                "summary": "Get admin Profile in the system",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/adminDashboard/addAdmin": {
+            "post": {
+                "tags": [
+                    "AdminDashboard"
+                ],
+                "summary": "Allow user to become admin",
+                "requestBody": {
+                    "description": "registration object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/Admin"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/adminDashboard/approvePublisher/{id}": {
+            "post": {
+                "tags": [
+                    "AdminDashboard"
+                ],
+                "summary": "approve the request to become a publisher",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully approved publisher registration"
+                    }
+                }
+            }
+        },
+        "/adminDashboard/suspendAdvancer/{id}": {
+            "post": {
+                "tags": [
+                    "AdminDashboard"
+                ],
+                "summary": "suspend the  adnvacer",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully suspended advancer"
+                    }
+                }
+            }
+        },
+        "/adminDashboard/revokePublisher/{id}": {
+            "post": {
+                "tags": [
+                    "AdminDashboard"
+                ],
+                "summary": "Decline a request to be a publisher",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully rejected publisher registration"
+                    }
+                }
+            }
+        },
+        "/adminDashboard/makeSuperAdmin/{id}": {
+            "post": {
+                "tags": [
+                    "AdminDashboard"
+                ],
+                "summary": "Make the admin the super admin",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully made the admin the super admin"
+                    }
+                }
+            }
+        },
+        "/adminDashboard/switchToPublisher/{id}": {
+            "post": {
+                "tags": [
+                    "AdminDashboard"
+                ],
+                "summary": "switch to the publisher view",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully switched to publisher"
+                    }
+                }
+            }
+        },
+        "/adminDashboard/switchToAdmin/{id}": {
+            "post": {
+                "tags": [
+                    "AdminDashboard"
+                ],
+                "summary": "switch to the admin",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully switched to admin"
+                    }
+                }
+            }
+        },
+        "/adminDashboard/sendEmailTo": {
+            "post": {
+                "tags": [
+                    "AdminDashboard"
+                ],
+                "summary": "Allow admin to send emails to publishers",
+                "requestBody": {
+                    "description": "send email body",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/sendEmail"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully sent the email"
+                    }
+                }
+            }
+        },
+        "/adminDashboard/getPublishers": {
+            "get": {
+                "tags": [
+                    "AdminDashboard"
+                ],
+                "summary": "Get all publishers in the system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Publisher"
+                        }
+                    }
+                }
+            }
+        },
+        "/articles/addArticle": {
+            "post": {
+                "tags": [
+                    "Articles"
+                ],
+                "summary": "Allow the publisher to add a new article",
+                "requestBody": {
+                    "description": "create an article",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/article"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "article successfully added"
+                    }
+                }
+            }
+        },
+        "/articles/addArticleCategory": {
+            "post": {
+                "tags": [
+                    "Articles"
+                ],
+                "summary": "Allow admin to add a article category(tag)",
+                "requestBody": {
+                    "description": "add article category",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/articleCategory"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "article successfully added"
+                    }
+                }
+            }
+        },
+        "/articles/advanceStory": {
+            "post": {
+                "tags": [
+                    "Articles"
+                ],
+                "summary": "Allow the advancer to advance a story",
+                "requestBody": {
+                    "description": "advance an article",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/advancedStory"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "article successfully added"
+                    }
+                }
+            }
+        },
+        "/articles/getArticles": {
+            "get": {
+                "tags": [
+                    "Articles"
+                ],
+                "summary": "Get all article in the system",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully retrieved the list of articles"
+                    }
+                }
+            }
+        },
+        "/articles/getArticleCategories": {
+            "get": {
+                "tags": [
+                    "Articles"
+                ],
+                "summary": "Get all article categories in the system",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully retrieved the list of articles categories"
+                    }
+                }
+            }
+        },
+        "/articles/getRecentArticles": {
+            "get": {
+                "tags": [
+                    "Articles"
+                ],
+                "summary": "Get recent articles",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully retrieved the list of articles categories"
+                    }
+                }
+            }
+        },
+        "/articles/getAdvancedStories": {
+            "get": {
+                "tags": [
+                    "Articles"
+                ],
+                "summary": "Get all advanced articles in the system",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully retrieved the list of articles"
+                    }
+                }
+            }
+        },
+        "/subscription/addPlan": {
+            "post": {
+                "tags": [
+                    "Subscription"
+                ],
+                "summary": "Allows admins to add a plan",
+                "requestBody": {
+                    "description": "add a new plan",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/plan"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully added a plan"
+                    }
+                }
+            }
+        },
+        "/subscription/updateAdvancerSubscription": {
+            "post": {
+                "tags": [
+                    "Subscription"
+                ],
+                "summary": "Allows users to subscribe to a certain plan of choice",
+                "requestBody": {
+                    "description": "subscribe to a plan",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/subscriber"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully subscribed to plan"
+                    }
+                }
+            }
+        },
+        "/subscription/updatePublisherSubscription": {
+            "post": {
+                "tags": [
+                    "Subscription"
+                ],
+                "summary": "Allows publishers to subscribe to a certain plan of choice",
+                "requestBody": {
+                    "description": "subscribe to a plan",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/subscriber"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully subscribed to plan"
+                    }
+                }
+            }
+        },
+        "/subscription/getPlans": {
+            "get": {
+                "tags": [
+                    "Subscription"
+                ],
+                "summary": "Get all plans added to the system so far",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully retrieved plans"
+                    }
+                }
+            }
+        },
+        "/metrics/addReadArticle": {
+            "post": {
+                "tags": [
+                    "Metrics"
+                ],
+                "summary": "Read read articles",
+                "requestBody": {
+                    "description": "add read article",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/Viewedarticle"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully read article"
+                    }
+                }
+            }
+        },
+        "/metrics/addViewedArticle": {
+            "post": {
+                "tags": [
+                    "Metrics"
+                ],
+                "summary": "Read just viewed articles",
+                "requestBody": {
+                    "description": "add viewed article",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/Viewedarticle"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully viewed article"
+                    }
+                }
+            }
+        },
+        "/metrics/getReadArticles": {
+            "get": {
+                "tags": [
+                    "Metrics"
+                ],
+                "summary": "Get number of read articles",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully retrieved articles"
+                    }
+                }
+            }
+        },
+        "/metrics/getViewedArticles": {
+            "get": {
+                "tags": [
+                    "Metrics"
+                ],
+                "summary": "Get number of viewed articles",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully retrieved articles"
+                    }
+                }
+            }
+        },
+        "/metrics/getPostedArticlesMonthly": {
+            "get": {
+                "tags": [
+                    "Metrics"
+                ],
+                "summary": "Get number of posted articles per month",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully retrieved articles"
+                    }
+                }
+            }
+        },
+        "/metrics/getWeeklyTopPublishers": {
+            "get": {
+                "tags": [
+                    "Metrics"
+                ],
+                "summary": "Get top publishers",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully retrieved publishers"
+                    }
+                }
+            }
+        },
+        "/metrics/getWeeklyTopAdvancers": {
+            "get": {
+                "tags": [
+                    "Metrics"
+                ],
+                "summary": "Get top advancers week",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully retrieved publishers"
+                    }
+                }
+            }
+        },
+        "/metrics/getpublishedArticlesLocated": {
+            "get": {
+                "tags": [
+                    "Metrics"
+                ],
+                "summary": "Get published articles grouped by the location",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully retrieved articles"
+                    }
+                }
+            }
+        },
+        "/notifications/sendNotification": {
+            "post": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Allows the system to send a notification to a certian user",
+                "requestBody": {
+                    "description": "send notification",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/notification"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully sent the notification"
+                    }
+                }
+            }
+        },
+        "/notifications/subscribeToNotifications": {
+            "post": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Allows the users to suscribe to certain notifications",
+                "requestBody": {
+                    "description": "subscribe to notification",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/notificationSubscriber"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully subscribed to the notifications"
+                    }
+                }
+            }
+        },
+        "/notifications/unsubcribeToNotifications/{id}": {
+            "put": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "unsubscribe to certain notification",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "requestBody": {
+                    "description": "unsubscribe to notification",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/notificationUnsubscriber"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successfully unsubscribed to notifications"
+                    }
+                }
+            }
+        },
+        "/notifications/getNotifications/{id}": {
+            "put": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "get the notifications",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "User id"
+                    }
+                ],
+                "requestBody": {
+                    "description": "notification object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/getNotification"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successfully got notifications"
+                    }
+                }
+            }
+        },
+        "/notifications/getNotificationTypes": {
+            "get": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Get all notification types in the system",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully retrieved the list of notification types"
+                    }
+                }
+            }
+        },
+        "/notifications/addNotificationType": {
+            "post": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Allows the admin to add notification types",
+                "requestBody": {
+                    "description": "add notification type",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/notificationType"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully added notification type"
+                    }
+                }
+            }
+        },
+        "/landingPage/getNoMonthlyReads": {
+            "get": {
+                "tags": [
+                    "LandingPage"
+                ],
+                "summary": "Get a number of articles read during the current month",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully retrieved the number of articles read this month"
+                    }
+                }
+            }
+        },
+        "/landingPage/getNoAdvancers": {
+            "get": {
+                "tags": [
+                    "LandingPage"
+                ],
+                "summary": "Get a number of advancers",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully retrieved the number of advancers"
+                    }
+                }
+            }
+        },
+        "/landingPage/getNoPublishers": {
+            "get": {
+                "tags": [
+                    "LandingPage"
+                ],
+                "summary": "Get a number of pubishers",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully retrieved no of publishers"
+                    }
+                }
+            }
+        },
+        "/landingPage/getNoArticles": {
+            "get": {
+                "tags": [
+                    "LandingPage"
+                ],
+                "summary": "Get number of articles",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully retrieved the number of articles"
+                    }
+                }
+            }
+        },
+        "/landingPage/sendContactUsEmail": {
+            "post": {
+                "tags": [
+                    "LandingPage"
+                ],
+                "summary": "Send contact us email",
+                "requestBody": {
+                    "description": "add details",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/ContactUsEmail"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully send message"
+                    }
+                }
+            }
+        },
+        "/landingPage/subscribeToNewsLetter": {
+            "post": {
+                "tags": [
+                    "LandingPage"
+                ],
+                "summary": "Subscribe to the news letter",
+                "requestBody": {
+                    "description": "add email address",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/NewsLetterEmail"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully send message"
+                    }
+                }
+            }
+        },
+        "/landingPage/getTopThreeArticles": {
+            "get": {
+                "tags": [
+                    "LandingPage"
+                ],
+                "summary": "Get top three article in the system",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfully retrieved the list of articles"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "id": {
+            "properties": {
+                "uuid": {
+                    "type": "string"
+                }
+            }
+        },
+        "User": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "surname": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "countryCode": {
+                    "type": "string"
+                }
+            }
+        },
+        "ContactUsEmail": {
+            "type": "object",
+            "properties": {
+                "Fistname": {
+                    "type": "string"
+                },
+                "Lastname": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "Content": {
+                    "type": "string"
+                }
+            }
+        },
+        "GoogleCode": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                }
+            }
+        },
+        "GoogleRefreshToken": {
+            "type": "object",
+            "properties": {
+                "refreshToken": {
+                    "type": "string"
+                }
+            }
+        },
+        "NewsLetterEmail": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "Advancer": {
+            "type": "object",
+            "properties": {
+                "userId": {
+                    "type": "string"
+                },
+                "planId": {
+                    "type": "string"
+                },
+                "company": {
+                    "type": "string"
+                },
+                "website": {
+                    "type": "string"
+                },
+                "applicationPassword": {
+                    "type": "string"
+                },
+                "wordpressAdminName": {
+                    "type": "string"
+                }
+            }
+        },
+        "notification": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "typeId": {
+                    "type": "string"
+                }
+            }
+        },
+        "notificationType": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "getNotification": {
+            "type": "object",
+            "properties": {
+                "typeId": {
+                    "type": "string"
+                }
+            }
+        },
+        "notificationSubscriber": {
+            "type": "object",
+            "properties": {
+                "userId": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "typeId": {
+                    "type": "string"
+                }
+            }
+        },
+        "notificationUnsubscriber": {
+            "type": "object",
+            "properties": {
+                "typeId": {
+                    "type": "string"
+                }
+            }
+        },
+        "Publisher": {
+            "type": "object",
+            "properties": {
+                "userId": {
+                    "type": "string"
+                },
+                "organisation": {
+                    "type": "string"
+                }
+            }
+        },
+        "sendEmail": {
+            "type": "object",
+            "properties": {
+                "recieverMail": {
+                    "type": "string"
+                },
+                "subject": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "Admin": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "phoneNumber": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+            }
+        },
+        "UpdateUserObject": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "surname": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "phoneNumber": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                }
+            }
+        },
+        "UpdatePassword": {
+            "type": "object",
+            "properties": {
+                "currentPassword": {
+                    "type": "string"
+                },
+                "newPassword": {
+                    "type": "string"
+                }
+            }
+        },
+        "adminPassword": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                }
+            }
+        },
+        "UserLogin": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "article": {
+            "type": "object",
+            "properties": {
+                "userId": {
+                    "type": "string"
+                },
+                "categoryId": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "body": {
+                    "type": "string"
+                },
+                "state": {
+                    "type": "string"
+                }
+            }
+        },
+        "EditArticle": {
+            "type": "object",
+            "properties": {
+                "categoryId": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "body": {
+                    "type": "string"
+                },
+                "state": {
+                    "type": "string"
+                }
+            }
+        },
+        "ArticleId": {
+            "type": "object",
+            "properties": {
+                "articleId": {
+                    "type": "string"
+                }
+            }
+        },
+        "PublisherId": {
+            "type": "object",
+            "properties": {
+                "publisherUserId": {
+                    "type": "string"
+                }
+            }
+        },
+        "websiteLink": {
+            "type": "object",
+            "properties": {
+                "websiteLink": {
+                    "type": "string"
+                }
+            }
+        },
+        "articleCategory": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "advancedStory": {
+            "type": "object",
+            "properties": {
+                "advancerUserId": {
+                    "type": "string"
+                },
+                "articleId": {
+                    "type": "string"
+                }
+            }
+        },
+        "Viewedarticle": {
+            "type": "object",
+            "properties": {
+                "articleId": {
+                    "type": "string"
+                }
+            }
+        },
+        "articleImage": {
+            "type": "object",
+            "properties": {
+                "articleId": {
+                    "type": "string"
+                },
+                "MediaName": {
+                    "type": "string"
+                },
+                "articleMedia": {
+                    "type": "string",
+                    "format": "binary"
+                }
+            }
+        },
+        "editArticleImage": {
+            "type": "object",
+            "properties": {
+                "MediaName": {
+                    "type": "string"
+                },
+                "articleMedia": {
+                    "type": "string",
+                    "format": "binary"
+                }
+            }
+        },
+        "mediaFile": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "container": {
+                    "type": "string"
+                },
+                "file": {
+                    "type": "file"
+                }
+            }
+        },
+        "updateMediaFile": {
+            "type": "object",
+            "properties": {
+                "file": {
+                    "type": "file"
+                }
+            }
+        },
+        "forgotPassword": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "plan": {
+            "type": "object",
+            "properties": {
+                "planName": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "string"
+                }
+            }
+        },
+        "subscriber": {
+            "type": "object",
+            "properties": {
+                "userId": {
+                    "type": "string"
+                },
+                "planId": {
+                    "type": "string"
+                }
+            }
+        },
+        "resetPassword": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "googleAuth": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
+        "Users": {
+            "type": "object",
+            "properties": {
+                "users": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/User"
+                    }
+                }
+            }
+        }
+    }
+}
