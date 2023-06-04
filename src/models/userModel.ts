@@ -19,9 +19,6 @@ export {};
     password:{
         type: String
     },
-    countryCode:{
-        type: String
-    },
     isAccountDeactivated:{
         type: Boolean,
         required: false,

@@ -592,9 +592,6 @@
                 },
                 "password": {
                     "type": "string"
-                },
-                "countryCode": {
-                    "type": "string"
                 }
             }
         },

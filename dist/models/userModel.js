@@ -19,9 +19,6 @@ var UserSchema = new Schema({
     password: {
         type: String
     },
-    countryCode: {
-        type: String
-    },
     isAccountDeactivated: {
         type: Boolean,
         required: false,

@@ -105,14 +105,14 @@ var GetGoogleCredentials = function (req, res) { return __awaiter(void 0, void 0
     });
 }); };
 var authenticateGoogleUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, ticket, payload, user_2, freeplan, Regadvancer, admin, advancer, publisher, isAdmin, isAdvancer, isPublisher, role, transporter, mailOptions, error_3;
+    var token, ticket, payload, user_2, transporter, mailOptions, error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 token = req.body.token;
                 _a.label = 1;
             case 1:
-                _a.trys.push([1, 12, , 13]);
+                _a.trys.push([1, 7, , 8]);
                 return [4 /*yield*/, googleClient.verifyIdToken({
                         idToken: token,
                         audience: "".concat(process.env.GOOGLE_CLIENT_ID),
@@ -123,12 +123,11 @@ var authenticateGoogleUser = function (req, res) { return __awaiter(void 0, void
                 return [4 /*yield*/, User.findOne({ email: payload === null || payload === void 0 ? void 0 : payload.email })];
             case 3:
                 user_2 = _a.sent();
-                if (!!user_2) return [3 /*break*/, 11];
+                if (!!user_2) return [3 /*break*/, 6];
                 return [4 /*yield*/, new User({
                         email: payload === null || payload === void 0 ? void 0 : payload.email,
                         surname: payload === null || payload === void 0 ? void 0 : payload.family_name,
                         name: payload === null || payload === void 0 ? void 0 : payload.name,
-                        countryCode: payload === null || payload === void 0 ? void 0 : payload.locale,
                         profilePicture: { name: payload === null || payload === void 0 ? void 0 : payload.picture },
                         provider: 1,
                     })];
@@ -137,31 +136,8 @@ var authenticateGoogleUser = function (req, res) { return __awaiter(void 0, void
                 return [4 /*yield*/, user_2.save()];
             case 5:
                 _a.sent();
-                return [4 /*yield*/, planModel.findOne({ planName: 'Free Plan' })];
-            case 6:
-                freeplan = _a.sent();
-                return [4 /*yield*/, advancerProfile.create({ userId: user_2._id, planId: freeplan._id })];
-            case 7:
-                Regadvancer = _a.sent();
-                return [4 /*yield*/, adminProfile.findOne({ userId: user_2._id })];
-            case 8:
-                admin = _a.sent();
-                return [4 /*yield*/, advancerProfile.findOne({ userId: user_2._id })];
-            case 9:
-                advancer = _a.sent();
-                return [4 /*yield*/, publisherProfile.findOne({ userId: user_2._id })];
-            case 10:
-                publisher = _a.sent();
-                isAdmin = admin ? true : false;
-                isAdvancer = advancer ? true : false;
-                isPublisher = publisher ? true : false;
-                role = {
-                    admin: isAdmin,
-                    publisher: isPublisher,
-                    advancer: isAdvancer
-                };
-                res.status(200).json({ 'status': true, AutToken: generateToken(user_2._id, user_2.name, user_2.surname, user_2.email, user_2.countryCode, role, user_2.profilePicture), user: { userId: user_2._id, firstName: user_2.name,
-                        lastName: user_2.name, email: user_2.email, countryCode: user_2.countryCode, role: role } });
+                res.status(200).json({ 'status': true, AutToken: generateToken(user_2._id, user_2.name, user_2.surname, user_2.email, user_2.profilePicture), user: { userId: user_2._id, firstName: user_2.name,
+                        lastName: user_2.name, email: user_2.email } });
                 try {
                     transporter = nodemailer.createTransport({
                         host: 'smtp.gmail.com',
@@ -169,12 +145,12 @@ var authenticateGoogleUser = function (req, res) { return __awaiter(void 0, void
                         secure: false,
                         requireTLS: true,
                         auth: {
-                            user: "noreply@minorityafrica.org",
+                            user: "thabomaibi1999@gmail.com",
                             pass: process.env.EMAILPASSWORD
                         }
                     });
                     mailOptions = {
-                        from: 'noreply@minorityafrica.org',
+                        from: 'thabomaibi1999@gmail.com',
                         to: payload === null || payload === void 0 ? void 0 : payload.email,
                         subject: 'Welcome to Advance',
                         html: '<p>Hi ' + (payload === null || payload === void 0 ? void 0 : payload.name) + ', Welcome to Advance, We are happy that you decided to join us on a journey to make Minority Voices be heard across Africa</p><br/><br/><p>The Advance team</p>'
@@ -191,13 +167,13 @@ var authenticateGoogleUser = function (req, res) { return __awaiter(void 0, void
                 catch (error) {
                     res.status(400).json({ status: false, error: error.message });
                 }
-                _a.label = 11;
-            case 11: return [3 /*break*/, 13];
-            case 12:
+                _a.label = 6;
+            case 6: return [3 /*break*/, 8];
+            case 7:
                 error_3 = _a.sent();
                 res.status(400).json({ error: error_3.message });
-                return [3 /*break*/, 13];
-            case 13: return [2 /*return*/];
+                return [3 /*break*/, 8];
+            case 8: return [2 /*return*/];
         }
     });
 }); };
@@ -212,12 +188,12 @@ var sendMail = function (to, subject, html) { return __awaiter(void 0, void 0, v
                 secure: false,
                 requireTLS: true,
                 auth: {
-                    user: "noreply@minorityafrica.org",
+                    user: "thabomaibi1999@gmail.com",
                     pass: process.env.EMAILPASSWORD
                 }
             });
             mailOptions = {
-                from: 'noreply@minorityafrica.org',
+                from: 'thabomaibi1999@gmail.com',
                 to: to,
                 subject: subject,
                 html: html
@@ -308,29 +284,29 @@ var updatePassword = function (req, res) { return __awaiter(void 0, void 0, void
 }); };
 //log in 
 var logIn = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, password, email, lowerCaseEmail, user_4, _b, admin, advancer, publisher, isAdmin, isAdvancer, isPublisher, role, error_6;
+    var _a, password, email, lowerCaseEmail, user_4, _b, error_6;
     return __generator(this, function (_c) {
         switch (_c.label) {
             case 0:
                 _a = req.body, password = _a.password, email = _a.email;
                 if (!(!email || !password)) return [3 /*break*/, 1];
                 res.status(400).json({ status: false, error: 'please add all fields' });
-                return [3 /*break*/, 15];
+                return [3 /*break*/, 10];
             case 1:
                 if (!(passwordStrength(password).value === 'Too weak' || passwordStrength(password).value === 'Weak')) return [3 /*break*/, 2];
                 res.status(400).json({ 'status': false, error: 'Your password is weak,it must be atleast 8 charecters and contain lowercase, uppercase, symbol and/or number' });
-                return [3 /*break*/, 15];
+                return [3 /*break*/, 10];
             case 2:
                 if (!!ValidateEmail(email)) return [3 /*break*/, 3];
                 res.status(400).json({ status: false, error: 'your email address is not valid' });
-                return [3 /*break*/, 15];
+                return [3 /*break*/, 10];
             case 3:
-                _c.trys.push([3, 14, , 15]);
+                _c.trys.push([3, 9, , 10]);
                 lowerCaseEmail = email.toLowerCase();
                 return [4 /*yield*/, User.findOne({ email: lowerCaseEmail })];
             case 4:
                 user_4 = _c.sent();
-                if (!user_4) return [3 /*break*/, 12];
+                if (!user_4) return [3 /*break*/, 7];
                 _b = user_4;
                 if (!_b) return [3 /*break*/, 6];
                 return [4 /*yield*/, bcrypt.compare(password, user_4.password)];
@@ -338,67 +314,46 @@ var logIn = function (req, res) { return __awaiter(void 0, void 0, void 0, funct
                 _b = (_c.sent());
                 _c.label = 6;
             case 6:
-                if (!_b) return [3 /*break*/, 10];
-                return [4 /*yield*/, adminProfile.findOne({ userId: user_4._id })];
+                if (_b) {
+                    res.status(200).json({
+                        'status': true,
+                        'message': 'succefull',
+                        token: generateToken(user_4._id, user_4.name, user_4.surname, user_4.email, user_4.profilePicture),
+                        userId: user_4.id,
+                        email: user_4.email,
+                        name: user_4.name,
+                        surname: user_4.surname,
+                        isAccountDeactivated: user_4.isAccountDeactivated
+                    });
+                }
+                else {
+                    res.status(400).json({ 'status': false, error: 'Invalid user credentials' });
+                }
+                return [3 /*break*/, 8];
             case 7:
-                admin = _c.sent();
-                return [4 /*yield*/, advancerProfile.findOne({ userId: user_4._id })];
-            case 8:
-                advancer = _c.sent();
-                return [4 /*yield*/, publisherProfile.findOne({ userId: user_4._id })];
-            case 9:
-                publisher = _c.sent();
-                isAdmin = admin ? true : false;
-                isAdvancer = advancer ? true : false;
-                isPublisher = publisher ? true : false;
-                role = {
-                    admin: isAdmin,
-                    publisher: isPublisher,
-                    advancer: isAdvancer
-                };
-                res.status(200).json({
-                    'status': true,
-                    'message': 'succefull',
-                    token: generateToken(user_4._id, user_4.name, user_4.surname, user_4.email, user_4.countryCode, role, user_4.profilePicture),
-                    userId: user_4.id,
-                    email: user_4.email,
-                    name: user_4.name,
-                    surname: user_4.surname,
-                    countryCode: user_4.countryCode,
-                    isAccountDeactivated: user_4.isAccountDeactivated,
-                    admin: isAdmin,
-                    publisher: isAdvancer,
-                    advancer: isPublisher
-                });
-                return [3 /*break*/, 11];
-            case 10:
-                res.status(400).json({ 'status': false, error: 'Invalid user credentials' });
-                _c.label = 11;
-            case 11: return [3 /*break*/, 13];
-            case 12:
                 res.status(400).json({ 'status': false, error: 'User not found, please register before trying to login' });
-                _c.label = 13;
-            case 13: return [3 /*break*/, 15];
-            case 14:
+                _c.label = 8;
+            case 8: return [3 /*break*/, 10];
+            case 9:
                 error_6 = _c.sent();
                 res.status(400).json({ error: error_6.message });
-                return [3 /*break*/, 15];
-            case 15: return [2 /*return*/];
+                return [3 /*break*/, 10];
+            case 10: return [2 /*return*/];
         }
     });
 }); };
 // register user
 var register = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, email, name, surname, password, countryCode, lowerCaseEmail, userExists, salt, Hashedpassword, user_5, freeplan, Regadvancer, admin, advancer, publisher, isAdmin, isAdvancer, isPublisher, role, transporter, mailOptions, error_7;
+    var _a, email, name, surname, password, lowerCaseEmail, userExists, salt, Hashedpassword, user_5, transporter, mailOptions, error_7;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _a = req.body, email = _a.email, name = _a.name, surname = _a.surname, password = _a.password, countryCode = _a.countryCode;
-                if (!(!name || !surname || !email || !password || !countryCode)) return [3 /*break*/, 1];
+                _a = req.body, email = _a.email, name = _a.name, surname = _a.surname, password = _a.password;
+                if (!(!name || !surname || !email || !password)) return [3 /*break*/, 1];
                 res.status(400).json({ status: false, error: 'please add all fields' });
-                return [3 /*break*/, 17];
+                return [3 /*break*/, 12];
             case 1:
-                if (!ValidateEmail(email)) return [3 /*break*/, 16];
+                if (!ValidateEmail(email)) return [3 /*break*/, 11];
                 lowerCaseEmail = email.toLowerCase();
                 if (!(passwordStrength(password).value === 'Too weak' || passwordStrength(password).value === 'Weak')) return [3 /*break*/, 2];
                 res.status(400).
@@ -406,13 +361,13 @@ var register = function (req, res) { return __awaiter(void 0, void 0, void 0, fu
                     'status': false,
                     error: 'Your password is weak,It must be atleast 8 characters and contain lowercase, uppercase, symbol and/or number'
                 });
-                return [3 /*break*/, 15];
+                return [3 /*break*/, 10];
             case 2: return [4 /*yield*/, User.findOne({ email: lowerCaseEmail })];
             case 3:
                 userExists = _b.sent();
                 if (!userExists) return [3 /*break*/, 4];
                 res.status(400).json({ status: false, error: 'user already exists' });
-                return [3 /*break*/, 15];
+                return [3 /*break*/, 10];
             case 4: return [4 /*yield*/, bcrypt.genSalt(10)];
             case 5:
                 salt = _b.sent();
@@ -421,40 +376,16 @@ var register = function (req, res) { return __awaiter(void 0, void 0, void 0, fu
                 Hashedpassword = _b.sent();
                 _b.label = 7;
             case 7:
-                _b.trys.push([7, 14, , 15]);
-                return [4 /*yield*/, User.create({ name: name, surname: surname, email: lowerCaseEmail, password: Hashedpassword, countryCode: countryCode })];
+                _b.trys.push([7, 9, , 10]);
+                return [4 /*yield*/, User.create({ name: name, surname: surname, email: lowerCaseEmail, password: Hashedpassword })];
             case 8:
                 user_5 = _b.sent();
-                return [4 /*yield*/, planModel.findOne({ planName: 'Free Plan' })];
-            case 9:
-                freeplan = _b.sent();
-                return [4 /*yield*/, advancerProfile.create({ userId: user_5._id, planId: freeplan._id })];
-            case 10:
-                Regadvancer = _b.sent();
-                return [4 /*yield*/, adminProfile.findOne({ userId: user_5._id })];
-            case 11:
-                admin = _b.sent();
-                return [4 /*yield*/, advancerProfile.findOne({ userId: user_5._id })];
-            case 12:
-                advancer = _b.sent();
-                return [4 /*yield*/, publisherProfile.findOne({ userId: user_5._id })];
-            case 13:
-                publisher = _b.sent();
-                isAdmin = admin ? true : false;
-                isAdvancer = advancer ? true : false;
-                isPublisher = publisher ? true : false;
-                role = {
-                    admin: isAdmin,
-                    publisher: isPublisher,
-                    advancer: isAdvancer
-                };
                 res.status(200).
                     json({ status: true,
-                    token: generateToken(user_5._id, user_5.name, user_5.surname, user_5.email, user_5.countryCode, role, user_5.profilePicture),
+                    token: generateToken(user_5._id, user_5.name, user_5.surname, user_5.email, user_5.profilePicture),
                     email: user_5.email,
                     name: user_5.name,
-                    surname: user_5.surname,
-                    countryCode: user_5.countryCode });
+                    surname: user_5.surname });
                 try {
                     transporter = nodemailer.createTransport({
                         host: 'smtp.gmail.com',
@@ -462,15 +393,15 @@ var register = function (req, res) { return __awaiter(void 0, void 0, void 0, fu
                         secure: false,
                         requireTLS: true,
                         auth: {
-                            user: "noreply@minorityafrica.org",
+                            user: "thabomaibi1999@gmail.com",
                             pass: process.env.EMAILPASSWORD
                         }
                     });
                     mailOptions = {
-                        from: 'noreply@minorityafrica.org',
+                        from: 'thabomaibi1999@gmail.com',
                         to: email,
-                        subject: 'Welcome to Advance',
-                        html: '<p>Hi ' + name + ', Welcome to Advance, We are happy that you decided to join us on a journey to make Minority Voices be heard across Africa</p><br/><br/><p>The Advance team</p>'
+                        subject: 'Welcome to Stylit',
+                        html: '<p>Hi ' + name + ', Welcome to Stylit, We are happy that you decided to join us</p><br/><br/><p>The STylit team</p>'
                     };
                     transporter.sendMail(mailOptions, function (error, info) {
                         if (error) {
@@ -484,16 +415,16 @@ var register = function (req, res) { return __awaiter(void 0, void 0, void 0, fu
                 catch (error) {
                     res.status(400).json({ status: false, error: error.message });
                 }
-                return [3 /*break*/, 15];
-            case 14:
+                return [3 /*break*/, 10];
+            case 9:
                 error_7 = _b.sent();
                 res.status(400).json({ status: false, error: error_7.message });
-                return [3 /*break*/, 15];
-            case 15: return [3 /*break*/, 17];
-            case 16:
+                return [3 /*break*/, 10];
+            case 10: return [3 /*break*/, 12];
+            case 11:
                 res.status(400).json({ status: false, error: 'your email address is not valid' });
-                _b.label = 17;
-            case 17: return [2 /*return*/];
+                _b.label = 12;
+            case 12: return [2 /*return*/];
         }
     });
 }); };
@@ -1047,8 +978,8 @@ function ValidateEmail(inputText) {
     }
 }
 // Generate token
-var generateToken = function (userId, firstName, lastName, email, countryCode, role, profilePic) {
-    return jwt.sign({ userId: userId, firstName: firstName, lastName: lastName, email: email, countryCode: countryCode, role: role, profilePic: profilePic }, process.env.JWT_SECRET, {
+var generateToken = function (userId, firstName, lastName, email, profilePic) {
+    return jwt.sign({ userId: userId, firstName: firstName, lastName: lastName, email: email, profilePic: profilePic }, process.env.JWT_SECRET, {
         expiresIn: '30d'
     });
 };

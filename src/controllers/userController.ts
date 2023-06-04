@@ -74,28 +74,14 @@ const authenticateGoogleUser = async (req: Request, res: Response) => {
             email: payload?.email,
             surname: payload?.family_name,
             name: payload?.name,
-            countryCode:payload?.locale,
             profilePicture:{name:payload?.picture},
             provider: 1,
           });
       
           await user.save();
-          const freeplan = await planModel.findOne({planName:'Free Plan'});
-          const Regadvancer = await advancerProfile.create({userId:user._id,planId:freeplan._id});
-          const admin = await adminProfile.findOne({userId:user._id});
-          const advancer = await advancerProfile.findOne({userId:user._id});
-          const publisher = await publisherProfile.findOne({userId:user._id});
-          const isAdmin = admin?true:false;
-          const isAdvancer = advancer?true:false;
-          const isPublisher = publisher?true:false;
-          let role ={
-              admin:isAdmin,
-              publisher:isPublisher,
-              advancer:isAdvancer
-          }
           res.status(200).json({'status':true,AutToken:generateToken(user._id,user.name,
-              user.surname,user.email,user.countryCode,role,user.profilePicture),user:{userId:user._id,firstName:user.name,
-                  lastName:user.name,email:user.email,countryCode:user.countryCode,role} });
+              user.surname,user.email,user.profilePicture),user:{userId:user._id,firstName:user.name,
+                  lastName:user.name,email:user.email} });
 
                   try {
                     const transporter = nodemailer.createTransport({
@@ -104,12 +90,12 @@ const authenticateGoogleUser = async (req: Request, res: Response) => {
                         secure:false,
                         requireTLS:true,
                         auth:{
-                            user:"noreply@minorityafrica.org",
+                            user:"thabomaibi1999@gmail.com",
                             pass:process.env.EMAILPASSWORD
                         }
                     });
                     const mailOptions = {
-                        from:'noreply@minorityafrica.org',
+                        from:'thabomaibi1999@gmail.com',
                         to:payload?.email,
                         subject:'Welcome to Advance',
                         html:'<p>Hi '+payload?.name+', Welcome to Advance, We are happy that you decided to join us on a journey to make Minority Voices be heard across Africa</p><br/><br/><p>The Advance team</p>'
@@ -145,12 +131,12 @@ const sendMail = async (to:any,subject:any,html:any) => {
             secure:false,
             requireTLS:true,
             auth:{
-                user:"noreply@minorityafrica.org",
+                user:"thabomaibi1999@gmail.com",
                 pass:process.env.EMAILPASSWORD
             }
         });
         const mailOptions = {
-            from:'noreply@minorityafrica.org',
+            from:'thabomaibi1999@gmail.com',
             to:to,
             subject:subject,
             html:html
@@ -243,31 +229,16 @@ const logIn = async (req:any,res:any)=>{
             const user = await User.findOne({email:lowerCaseEmail});
             if (user) {
                 if(user&&(await bcrypt.compare(password,user.password))){
-                    const admin = await adminProfile.findOne({userId:user._id});
-                    const advancer = await advancerProfile.findOne({userId:user._id});
-                    const publisher = await publisherProfile.findOne({userId:user._id});
-                    const isAdmin = admin?true:false;
-                    const isAdvancer = advancer?true:false;
-                    const isPublisher = publisher?true:false;
-                    let role ={
-                        admin:isAdmin,
-                        publisher:isPublisher,
-                        advancer:isAdvancer
-                    }
                     res.status(200).json({
                         'status':true,
                         'message':'succefull',
                         token:generateToken(user._id,user.name,
-                            user.surname,user.email,user.countryCode,role,user.profilePicture),
+                            user.surname,user.email,user.profilePicture),
                         userId:user.id,
                         email:user.email,
                         name:user.name,
                         surname:user.surname,
-                        countryCode:user.countryCode,
-                        isAccountDeactivated:user.isAccountDeactivated,
-                        admin:isAdmin,
-                        publisher:isAdvancer,
-                        advancer:isPublisher});
+                        isAccountDeactivated:user.isAccountDeactivated});
                 }else{
                     res.status(400).json({'status':false,error: 'Invalid user credentials'})
                 }
@@ -290,10 +261,9 @@ const register = async (req:any,res:any)=>{
         email, 
         name,
         surname,
-        password,
-        countryCode} = req.body;
+        password} = req.body;
         // check that all inputs are filled
-        if(!name||!surname||!email||!password||!countryCode){
+        if(!name||!surname||!email||!password){
             res.status(400).json({status:false,error: 'please add all fields'}) 
         }
         else
@@ -322,28 +292,14 @@ const register = async (req:any,res:any)=>{
                     const Hashedpassword = await bcrypt.hash(password,salt);
                     // console.log(req.body);
                     try {
-                        const user = await User.create({name,surname,email:lowerCaseEmail,password:Hashedpassword,countryCode});
-                        const freeplan = await planModel.findOne({planName:'Free Plan'});
-                        const Regadvancer = await advancerProfile.create({userId:user._id,planId:freeplan._id});
-                        const admin = await adminProfile.findOne({userId:user._id});
-                        const advancer = await advancerProfile.findOne({userId:user._id});
-                        const publisher = await publisherProfile.findOne({userId:user._id});
-                        const isAdmin = admin?true:false;
-                        const isAdvancer = advancer?true:false;
-                        const isPublisher = publisher?true:false;
-                        let role ={
-                            admin:isAdmin,
-                            publisher:isPublisher,
-                            advancer:isAdvancer
-                        }
+                        const user = await User.create({name,surname,email:lowerCaseEmail,password:Hashedpassword});
                         res.status(200).
                         json( {status:true,
                             token:generateToken(user._id,user.name,
-                                user.surname,user.email,user.countryCode,role,user.profilePicture),
+                                user.surname,user.email,user.profilePicture),
                             email:user.email,
                             name:user.name,
-                            surname:user.surname,
-                            countryCode:user.countryCode});
+                            surname:user.surname});
                             
                             try {
                                 const transporter = nodemailer.createTransport({
@@ -352,15 +308,15 @@ const register = async (req:any,res:any)=>{
                                     secure:false,
                                     requireTLS:true,
                                     auth:{
-                                        user:"noreply@minorityafrica.org",
+                                        user:"thabomaibi1999@gmail.com",
                                         pass:process.env.EMAILPASSWORD
                                     }
                                 });
                                 const mailOptions = {
-                                    from:'noreply@minorityafrica.org',
+                                    from:'thabomaibi1999@gmail.com',
                                     to:email,
-                                    subject:'Welcome to Advance',
-                                    html:'<p>Hi '+name+', Welcome to Advance, We are happy that you decided to join us on a journey to make Minority Voices be heard across Africa</p><br/><br/><p>The Advance team</p>'
+                                    subject:'Welcome to Stylit',
+                                    html:'<p>Hi '+name+', Welcome to Stylit, We are happy that you decided to join us</p><br/><p>The Stylit team</p>'
                                  }
                                 transporter.sendMail(mailOptions,function(error:any,info:any){
                                     if (error) {
@@ -786,8 +742,8 @@ function ValidateEmail(inputText:any)
     }
 // Generate token
 const generateToken = (userId:any,firstName:any,
-    lastName:any,email:any,countryCode:any,role:any,profilePic:any)=>{
-    return jwt.sign({userId,firstName,lastName,email,countryCode,role,profilePic},process.env.JWT_SECRET,{
+    lastName:any,email:any,profilePic:any)=>{
+    return jwt.sign({userId,firstName,lastName,email,profilePic},process.env.JWT_SECRET,{
         expiresIn:'30d'
     })
 }
