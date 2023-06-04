@@ -1,6 +1,5 @@
-# Minority Africa Git Workflow 
+# Stylit backend
 
-<https://guides.github.com/introduction/flow/>
 
 ## Branch Naming Convention:
 
